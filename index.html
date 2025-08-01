@@ -17,7 +17,7 @@ button    {padding:6px 12px;border:0;border-radius:6px;color:#fff;
            cursor:pointer;margin-right:6px}
 #gerar    {background:#007bff}
 #full     {background:#198754}
-#sanity   {background:#dc3545;display:none}
+#sanity   {background:#dc3545;}
 
 table     {width:100%;border-collapse:collapse}
 th,td     {border:1px solid #ccc;padding:6px;text-align:left}
@@ -67,11 +67,6 @@ tr.unpicked td.nome{color:#d00}
       <img src="https://media-lis1-1.cdn.whatsapp.net/v/t61.24694-24/490582880_673190018857920_7995704823271648352_n.jpg?ccb=11-4&oh=01_Q5Aa2AFUwOMmp_2xN2tuzDaZhXR_OT1Yc-0Rq5skDkHvmSvQfA&oe=689878F2&_nc_sid=5e03e0&_nc_cat=105"
            alt="Escudo">
       <span>Salgueiros FC</span>
-
-      <label class="toggle">
-        <input type="checkbox" id="modo">
-        <span>modo insano</span>
-      </label>
     </div>
   </div>
 
@@ -327,9 +322,6 @@ document.getElementById("gerar").onclick  = () => run(draftPrioridade);
 document.getElementById("full").onclick   = () => run(draftCompleto);
 document.getElementById("sanity").onclick = () => run(draftSanidade);
 
-document.getElementById("modo").onchange  = e=>{
-  document.getElementById("sanity").style.display = e.target.checked ? "inline-block":"none";
-};
 </script>
 </body>
 </html>

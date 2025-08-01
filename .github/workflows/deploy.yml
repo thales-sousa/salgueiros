@@ -1,0 +1,22 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4   # sempre use a versão mais recente
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages    # opcional (padrão já é gh-pages)
+          publish_dir: ./site         # <-- diretório sem .git
+          user_name: Deploy Bot       # opcional, mas evita warnings
+          user_email: actions@github.com

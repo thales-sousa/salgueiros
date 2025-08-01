@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Draft Tier 0-3 • Salgueiros FC</title>
 <style>
-*{box-sizing:border-box;font-family:system-ui,Arial,Helvetica,sans-serif}
+*{box-sizing:border-box;font-family:system-ui,arial,helvetica,sans-serif}
 body{margin:0;padding:20px;display:flex;gap:20px}
 #left{width:40%}
 #teams{flex:1;display:flex;gap:20px}
@@ -15,12 +15,12 @@ table{width:100%;border-collapse:collapse}
 th,td{border:1px solid #ccc;padding:6px;text-align:left}
 th{background:#eee}
 td.nome{cursor:grab}
-tr.picked td{color:#000;text-decoration:line-through}
+tr.picked td{text-decoration:line-through}
 tr.unpicked td.nome{color:#d00}
 .team{border:1px solid #777;border-radius:6px;padding:8px;flex:1;min-height:300px;display:flex;flex-direction:column;gap:4px}
 .slot{border:1px dashed #aaa;border-radius:4px;padding:6px;min-height:24px;cursor:pointer;display:flex;align-items:center;gap:6px}
 .slot.filled{border-style:solid;background:#f5f5f5}
-.remove{margin-left:auto;background:none;border:none;color:#000;font-weight:bold;width:18px;height:18px;line-height:16px;font-size:12px;cursor:pointer}
+.remove{margin-left:auto;background:none;border:none;font-weight:bold;width:18px;height:18px;line-height:16px;font-size:12px;cursor:pointer}
 .remove:hover{opacity:.4}
 .skeleton{background:#e0e0e0;position:relative;overflow:hidden}
 .skeleton::after{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);animation:load 1.2s infinite}
@@ -37,7 +37,7 @@ tr.unpicked td.nome{color:#d00}
     <button id="gerar">Gerar Draft</button>
     <button id="full">Sortear Completo</button>
   </div>
-  <h3>Pool Tier 2-3-?</h3>
+  <h3>Pool Tier 2-3</h3>
   <table>
     <thead><tr><th>Nome</th><th>Tier</th><th>Status</th></tr></thead>
     <tbody id="pool"></tbody>
@@ -51,7 +51,6 @@ tr.unpicked td.nome{color:#d00}
 <div id="teams"></div>
 
 <script>
-/* --- base de jogadores -------------------------------------------------- */
 const base=[
  {n:"Alê",t:0},{n:"Thales Garcia",t:0},{n:"Nelson",t:0},{n:"Diego Griep",t:0},{n:"Will",t:0},{n:"Zé",t:0},
  {n:"Lucas Oliveira",t:1},{n:"João Oliveira",t:1},{n:"Rafael Mizerani",t:1},{n:"Luciano Jr.",t:1},
@@ -62,16 +61,12 @@ const base=[
  {n:"Luis",t:2},{n:"Thiago Ferreira",t:2},{n:"Vica",t:2},{n:"Lucas Araújo",t:2},
  {n:"Mateus Bolsoni",t:3},{n:"Thiago Alves",t:3},{n:"Laercio",t:3},{n:"Brunno Simoes",t:3}
 ];
-
-/* --- helpers ------------------------------------------------------------ */
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a};
-
-/* gera skeleton enquanto "carrega" -------------------------------------- */
 function skeleton(){
   const teamsDiv=document.getElementById("teams");teamsDiv.innerHTML="";
   for(let i=0;i<3;i++){
     const d=document.createElement("div");d.className="team";
-    d.innerHTML=`<strong class="skeleton" style="height:18px;width:70px;border-radius:4px"></strong>`;
+    d.innerHTML='<strong class="skeleton" style="height:18px;width:70px;border-radius:4px"></strong>';
     for(let k=0;k<7;k++){
       const s=document.createElement("div");s.className="slot skeleton";s.style.height="20px";d.appendChild(s);
     }
@@ -80,21 +75,16 @@ function skeleton(){
   const tbody=document.getElementById("pool");tbody.innerHTML="";
   for(let r=0;r<6;r++){
     const tr=document.createElement("tr");
-    tr.innerHTML=`<td class="skeleton" style="height:18px"></td><td class="skeleton" style="width:40px;height:18px"></td><td class="skeleton" style="width:80px;height:18px"></td>`;
+    tr.innerHTML='<td class="skeleton" style="height:18px"></td><td class="skeleton" style="width:40px;height:18px"></td><td class="skeleton" style="width:80px;height:18px"></td>';
     tbody.appendChild(tr);
   }
 }
-
-/* monta / atualiza pool highlight --------------------------------------- */
 function updatePoolHighlight(){
   const full=[...document.querySelectorAll(".team")].every(t=>t.querySelectorAll(".filled").length===7);
   document.querySelectorAll("#pool tr").forEach(tr=>{
-    if(full && !tr.classList.contains("picked")) tr.classList.add("unpicked");
-    else tr.classList.remove("unpicked");
+    full&&!tr.classList.contains("picked")?tr.classList.add("unpicked"):tr.classList.remove("unpicked");
   });
 }
-
-/* renderização ----------------------------------------------------------- */
 function render(times,pool){
   const teamsDiv=document.getElementById("teams");teamsDiv.innerHTML="";
   times.forEach((t,i)=>{
@@ -111,7 +101,6 @@ function render(times,pool){
     }
     teamsDiv.appendChild(div);
   });
-  /* tabela pool --------------------------------------------------------- */
   const tbody=document.getElementById("pool");tbody.innerHTML="";
   pool.forEach(p=>{
     const tr=document.createElement("tr");tr.id="p_"+p.n.replace(/\s+/g,"_");
@@ -123,45 +112,41 @@ function render(times,pool){
   });
   updatePoolHighlight();
 }
-
-/* funções de draft ------------------------------------------------------- */
 function draftPrioridade(confirmados){
   const confirmSet=confirmados.map(s=>s.toLowerCase());
   const oficiais=base.filter(p=>confirmSet.includes(p.n.toLowerCase()));
-  const fantasmas=confirmados.filter(n=>!base.some(b=>b.n.toLowerCase()===n.toLowerCase()))
-                             .map(n=>({n,t:"?"}));
-
+  const fantasmas=confirmados.filter(n=>!base.some(b=>b.n.toLowerCase()===n.toLowerCase())).map(n=>({n,t:3}));
   const t0=shuffle(oficiais.filter(p=>p.t===0));
   const t1=shuffle(oficiais.filter(p=>p.t===1));
   const pool=shuffle([...oficiais.filter(p=>p.t>1),...fantasmas]);
-
   const teams=[[],[],[]];
   let idx=Math.floor(Math.random()*3);
-  for(const p of t0){teams[idx].push(p);idx=(idx+1)%3;}
-  for(const p of t1){teams[idx].push(p);idx=(idx+1)%3;}
-  return {teams,pool};
+  t0.forEach(p=>{teams[idx].push(p);idx=(idx+1)%3});
+  t1.forEach(p=>{teams[idx].push(p);idx=(idx+1)%3});
+  return{teams,pool};
 }
-
 function draftCompleto(confirmados){
   const confirmSet=confirmados.map(s=>s.toLowerCase());
   const oficiais=base.filter(p=>confirmSet.includes(p.n.toLowerCase()));
-  const fantasmas=confirmados.filter(n=>!base.some(b=>b.n.toLowerCase()===n.toLowerCase()))
-                             .map(n=>({n,t:"?"}));
-
-  const pool=shuffle([...oficiais,...fantasmas]);
+  const fantasmas=confirmados.filter(n=>!base.some(b=>b.n.toLowerCase()===n.toLowerCase())).map(n=>({n,t:3}));
+  const tier0=shuffle(oficiais.filter(p=>p.t===0));
+  const tier1=shuffle(oficiais.filter(p=>p.t===1));
+  const tier2=shuffle(oficiais.filter(p=>p.t===2));
+  const tier3=shuffle([...oficiais.filter(p=>p.t===3),...fantasmas]);
+  const tiers=[tier0,tier1,tier2,tier3];
   const teams=[[],[],[]];
-  for(let i=0;i<21 && i<pool.length;i++){teams[i%3].push(pool[i]);}
-  const resto=pool.slice(21);   /* sobram na pool */
-  return {teams:teams,pool:resto};
+  let idx=0;
+  tiers.forEach(lista=>lista.forEach(p=>{teams[idx].push(p);idx=(idx+1)%3}));
+  const alocados=new Set(teams.flat().map(p=>p.n));
+  const pool=[...tier0,...tier1,...tier2,...tier3].filter(p=>!alocados.has(p.n));
+  return{teams,pool};
 }
-
-/* drag-n-drop manual ----------------------------------------------------- */
 function dropHandler(e){
   e.preventDefault();
-  if(this.classList.contains("filled")) return;
+  if(this.classList.contains("filled"))return;
   const nome=e.dataTransfer.getData("text/plain");
   const row=document.getElementById("p_"+nome.replace(/\s+/g,"_"));
-  if(!row||row.classList.contains("picked")) return;
+  if(!row||row.classList.contains("picked"))return;
   this.innerHTML=`<span>${nome}</span><button class="remove">×</button>`;
   this.classList.add("filled");
   row.classList.add("picked");
@@ -172,26 +157,23 @@ function dropHandler(e){
     row.classList.remove("picked");
     row.querySelector(".status").textContent="Disponível";
     updatePoolHighlight();
-  }
+  };
 }
-
-/* botões ----------------------------------------------------------------- */
 document.getElementById("gerar").onclick=()=>{
   skeleton();
   setTimeout(()=>{
     const confirmados=document.getElementById("lista").value.split(",").map(s=>s.trim()).filter(Boolean);
-    const {teams,pool}=draftPrioridade(confirmados);
+    const{teams,pool}=draftPrioridade(confirmados);
     render(teams,pool);
-  },800);
+  },600);
 };
-
 document.getElementById("full").onclick=()=>{
   skeleton();
   setTimeout(()=>{
     const confirmados=document.getElementById("lista").value.split(",").map(s=>s.trim()).filter(Boolean);
-    const {teams,pool}=draftCompleto(confirmados);
-    render(teams,pool);      /* pool mostrará apenas sobras, se existirem */
-  },800);
+    const{teams,pool}=draftCompleto(confirmados);
+    render(teams,pool);
+  },600);
 };
 </script>
 </body>

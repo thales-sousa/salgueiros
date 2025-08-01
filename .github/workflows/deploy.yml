@@ -1,5 +1,4 @@
 # .github/workflows/deploy.yml
-
 name: Deploy to GitHub Pages
 
 on:
@@ -14,6 +13,10 @@ permissions:
 
 jobs:
   deploy:
+    # ← adicione esta parte
+    environment:
+      name: github-pages
+
     runs-on: ubuntu-latest
 
     steps:
@@ -26,7 +29,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'      # ◀ publica tudo que estiver na raiz, incluindo seu index.html
+          path: '.'      # publica toda a raiz
 
       - name: Deploy to GitHub Pages
         id: deployment

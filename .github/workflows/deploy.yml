@@ -26,13 +26,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Debug – listar arquivos
+        run: |
+          echo "=== PWD ==="
+          pwd
+          echo "=== LISTA RECURSIVA ==="
+          ls -R .
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./sites       # ← aqui você aponta para a sua pasta de build
+          path: ./sites
 
       - name: Deploy to GitHub Pages
         id: deployment

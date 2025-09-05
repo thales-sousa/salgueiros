@@ -57,7 +57,7 @@ const base = [
   {n:"Will",t:0,s:0},{n:"Zé",t:0,s:2},{n:"Salah",t:0,s:1},
   {n:"Lucas Oliveira",t:1,s:0},{n:"João Oliveira",t:1,s:0},{n:"Rafael Mizerani",t:1,s:0},
   {n:"Luciano Jr.",t:1,s:3},{n:"Pretzel",t:1,s:2},{n:"Vicente",t:1,s:2},{n:"Ricardo",t:1,s:1},
-  {n:"Thiago Ferreira",t:1,s:1},{n:"Thales Garcia",t:1,s:0},
+  {n:"Thiago Ferreira",t:1,s:1},{n:"Thales Garcia",t:0,s:0},
   {n:"Rafael Esquiçato",t:2,s:1},{n:"Guilherme",t:2,s:2},{n:"Fabio Manzatto",t:2,s:2},
   {n:"Thiago Calazans",t:2,s:2},{n:"Mauricio",t:2,s:1},{n:"Daniel Coutinho",t:2,s:1},
   {n:"Castilho",t:2,s:3},{n:"Olavo",t:2,s:2},{n:"Breno",t:2,s:3},{n:"Deni",t:2,s:2},
@@ -135,7 +135,7 @@ function render (teams, pool) {
     t.forEach(p=>{
       const slot = document.createElement("div");
       slot.className = "slot filled";
-      slot.textContent = `${p.n} (Tier ${p.t}) ${p.s}`;
+      slot.textContent = `${p.n} (Tier ${p.t})`;
       col.appendChild(slot);
     });
     for (let k=t.length;k<7;k++){
